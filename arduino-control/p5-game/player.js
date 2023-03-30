@@ -26,14 +26,17 @@ class Player {
   jump() {
     if (this.onFloor) {
       this.velY = -this.jumpForce;
-      fetch("http://localhost:3000/toggle").then((res, err) => {
-      })
+      // fetch("http://localhost:3000/toggle").then((res, err) => {
+      // })
+      socket.emit("led_toggle", "blah")
     }
   }
   draw() {
     strokeWeight(0);
     fill(PLAYER_COLOR);
-    rect(this.x, this.y, this.sizeX, this.sizeY);
+    //rect(this.x, this.y, this.sizeX, this.sizeY);
+    imageMode(CORNER);
+    image(DINO_IMAGE, this.x, this.y, this.sizeX, this.sizeY);
   }
   checkCollision() {
     let firstEnemy = enemies[0];

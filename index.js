@@ -4,6 +4,16 @@ let path = require("path");
 const app = express();
 const port = 3000;
 app.use(express.static(path.join(__dirname, 'arduino-control')))
+
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(8080, {
+  cors: {
+    origin: "*"
+  }
+});
+
 var board = new jf.Board({port: "COM3"});
 
 board.on("ready", () => {
@@ -16,13 +26,14 @@ board.on("ready", () => {
     led.off();
     res.send("Turned off the led.")
   })
-  app.get("/toggle", (req, res) => {
-    led.toggle();
-    res.send("Toggled the led.")
+
+  io.on("connection", socket => {
+    console.log("Client connected to websocket!")
+    socket.on("led_toggle", (args) => {
+      led.toggle();
+    })
   })
-
 })
-
 app.listen(port, () => {
   console.log("Express listening on port" + port);
 })

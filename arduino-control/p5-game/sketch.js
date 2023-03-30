@@ -1,6 +1,7 @@
 // Creating p5() so that p5 functions can be used before setup.
 new p5();
 const FLOOR_HEIGHT = 50;
+const socket = io("ws://localhost:8080");
 
 // Colors
 const SKY_COLOR = color(150, 150, 255);
@@ -19,12 +20,14 @@ let enemiesToBeDespawned = 0;
 
 // Important resources
 let enemySpawnInterval;
-const pixelFont = loadFont("p5-game/PixelEmulator-xq08.ttf")
+const PIXEL_FONT = loadFont("p5-game/PixelEmulator-xq08.ttf")
+const DINO_IMAGE = loadImage("p5-game/dino.png")
 
 function setup() {
   createCanvas(600, 400);
+  drawingContext.imageSmoothingEnabled = false;
   console.log("Created p5.js sketch.");
-  textFont(pixelFont);
+  textFont(PIXEL_FONT);
 }
 
 function draw() {
@@ -72,9 +75,11 @@ function runMenu() {
 
   textSize(24);
   text("Press space & don't die", width / 2, height / 4 * 3);
+
+  imageMode(CENTER);
+  image(DINO_IMAGE, width / 2, height / 2, 150, 150);
 }
 function keyPressed() {
-  console.log(keyCode);
   switch (gameState) {
     case "game":
       if (keyCode == UP_ARROW || keyCode == 87 /*w*/ || keyCode == 32 /* space */) {
