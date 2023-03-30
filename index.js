@@ -4,7 +4,7 @@ let path = require("path");
 const app = express();
 const port = 3000;
 app.use(express.static(path.join(__dirname, 'arduino-control')))
-var board = new jf.Board();
+var board = new jf.Board({port: "COM3"});
 
 board.on("ready", () => {
   let led = new jf.Led(9)

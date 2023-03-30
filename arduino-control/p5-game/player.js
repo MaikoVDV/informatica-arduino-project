@@ -37,5 +37,11 @@ class Player {
   }
   checkCollision() {
     let firstEnemy = enemies[0];
+    if (!firstEnemy) return; // Exit if there are no enemies.
+    if (this.x + this.sizeX > firstEnemy.x && this.x < firstEnemy.x + firstEnemy.sizeX) {
+      if (this.y + this.sizeY > firstEnemy.y && this.y < firstEnemy.y + firstEnemy.sizeY) {
+        dieLmaoUBad();
+      }
+    }
   }
 }

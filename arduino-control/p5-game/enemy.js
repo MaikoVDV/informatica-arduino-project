@@ -13,6 +13,8 @@ class Enemy {
     }
   }
   draw() {
+    strokeWeight(0);
+    fill(ENEMY_COLOR);  
     rect(this.x, this.y, this.sizeX, this.sizeY)
   }
 }
