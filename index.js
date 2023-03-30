@@ -1,7 +1,9 @@
 var jf = require("johnny-five");
 let express = require("express");
+let path = require("path");
 const app = express();
 const port = 3000;
+app.use(express.static(path.join(__dirname, 'arduino-control')))
 var board = new jf.Board();
 
 board.on("ready", () => {
@@ -14,6 +16,11 @@ board.on("ready", () => {
     led.off();
     res.send("Turned off the led.")
   })
+  app.get("/toggle", (req, res) => {
+    led.toggle();
+    res.send("Toggled the led.")
+  })
+
 })
 
 app.listen(port, () => {
