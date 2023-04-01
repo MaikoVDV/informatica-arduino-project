@@ -4,7 +4,9 @@ const FLOOR_HEIGHT = 50;
 const socket = io("ws://localhost:8080");
 
 // Colors
-const SKY_COLOR = color(150, 150, 255);
+const BG_COLOR = color(150, 150, 255);
+const BG_IMAGE = loadImage("p5-game/background.jpg");
+let bgBlendValue = 0;
 const GRASS_COLOR = color(77, 205, 25);
 const GRASS_TOP_COLOR = color(54, 178, 3);
 const PLAYER_COLOR = color(255)
@@ -12,6 +14,8 @@ const ENEMY_COLOR = color(255)
 
 
 let gameState = "main-menu";
+let challengeMode = false;
+let immortal = false;
 
 // Entites in the game
 let player;
@@ -29,6 +33,21 @@ function setup() {
   drawingContext.imageSmoothingEnabled = false;
   console.log("Created p5.js sketch.");
   textFont(PIXEL_FONT);
+
+  socket.on("background_change", (value) => {
+    //bgBlendValue = (value > 200) ? value / 4 : 0;
+    bgBlendValue = value / 4 - 50
+  })
+  socket.on("input_jump", () => {
+    switch (gameState) {
+      case "game":
+        player.jump();
+        break;
+      case "main-menu":
+        setupGame();
+        break;
+    }
+  })
 }
 
 function draw() {
@@ -48,12 +67,18 @@ function setupGame() {
   enemies = [];
   enemiesToBeDespawned = 0;
 
+  socket.emit("play_music", "mario")
+
   //enemySpawnInterval = setInterval(spawnEnemy, 1000)
   spawnEnemy();
 
 }
 function runGame() {
-  background(SKY_COLOR);
+  background(BG_COLOR);
+  //blend(BG_IMAGE, 0, 0, 566, 701, 0, 0, 566, 701, ADD);
+  tint(255, bgBlendValue);
+  image(BG_IMAGE, 0, 0);
+  tint(255, 255);
   drawEnvironment();
 
 
@@ -74,15 +99,31 @@ function runMenu() {
   fill(255);
 
   textSize(32);
-  text("Ardino run", width / 2, height / 4);
+  text("Ardino run", width / 2, height / 5);
 
   textSize(24);
   text("Press space & don't die", width / 2, height / 4 * 3);
+
+  textSize(16);
+  text("Press C for challenge mode", width / 2, height / 4 * 3.5);
 
   imageMode(CENTER);
   image(DINO_IMAGE, width / 2, height / 2, 150, 150);
 }
 function keyPressed() {
+  if (keyCode == 73) {
+    immortal = !immortal;
+  }
+  if (keyCode == 67) {
+    if (!challengeMode) {
+      immortal = false;
+      socket.emit("challenge_mode", "start_challenge");
+      challengeMode = true;
+    } else {
+      socket.emit("challenge_mode", "stop");
+      challengeMode = false;
+    }
+  }
   switch (gameState) {
     case "game":
       if (keyCode == UP_ARROW || keyCode == 87 /*w*/ || keyCode == 32 /* space */) {
@@ -114,10 +155,11 @@ function despawnEnemies() {
 }
 function spawnEnemy() {
   if (gameState != "game") return;
-  enemies.push(new Enemy(100, 100))
+  enemies.push(new Enemy(85, 85))
   let randWait = Math.floor((Math.random() * (1100 - 700 + 1) + 700)) * spawnMultiplier;
   setTimeout(spawnEnemy, randWait);
 }
 function dieLmaoUBad() {
+  socket.emit("play_music", "dead");
   gameState = "main-menu";
 }

@@ -10,10 +10,6 @@ class Player {
     this.velY = 0;
     this.jumpForce = 20;
     this.onFloor = false;
-
-    socket.on("input_jump", () => {
-      this.jump();
-    })
   }
   update() {
     this.velY += GRAVITY;
@@ -41,6 +37,7 @@ class Player {
     image(DINO_IMAGE, this.x, this.y, this.sizeX, this.sizeY);
   }
   checkCollision() {
+    if (immortal) return;
     let firstEnemy = enemies[0];
     if (!firstEnemy) return; // Exit if there are no enemies.
     if (this.x + this.sizeX > firstEnemy.x && this.x < firstEnemy.x + firstEnemy.sizeX) {

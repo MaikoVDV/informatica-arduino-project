@@ -1,0 +1,24 @@
+/* Based on CSS from https://anuken.github.io/ */
+body {
+    background-image: url("crack-website-bg.jpg");
+    background-repeat: repeat;
+    background-size: 149px;
+    animation: scroll 5s linear infinite;
+    overflow: hidden;
+}
+@keyframes scroll {
+    from {
+        background-position: 297px 0px;
+    }
+    to {
+        background-position: 0px 291px;
+    }
+}
+.p5Canvas {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border: white solid 30px;
+    border-radius: 5px;
+}
