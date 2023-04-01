@@ -17,11 +17,12 @@ let gameState = "main-menu";
 let player;
 let enemies = [];
 let enemiesToBeDespawned = 0;
+let spawnMultiplier;
 
 // Important resources
-let enemySpawnInterval;
 const PIXEL_FONT = loadFont("p5-game/PixelEmulator-xq08.ttf")
 const DINO_IMAGE = loadImage("p5-game/dino.png")
+const ENEMY_IMAGE = loadImage("p5-game/gigachad.jpg")
 
 function setup() {
   createCanvas(600, 400);
@@ -41,13 +42,15 @@ function draw() {
   }
 }
 function setupGame() {
+  gameState = "game";
+  spawnMultiplier = 1.3
   player = new Player(20, 20, 50, 50);
   enemies = [];
   enemiesToBeDespawned = 0;
 
-  enemySpawnInterval = setInterval(spawnEnemy, 1000)
+  //enemySpawnInterval = setInterval(spawnEnemy, 1000)
+  spawnEnemy();
 
-  gameState = "game";
 }
 function runGame() {
   background(SKY_COLOR);
@@ -110,9 +113,11 @@ function despawnEnemies() {
   enemiesToBeDespawned = 0;
 }
 function spawnEnemy() {
-  enemies.push(new Enemy(50, 50))
+  if (gameState != "game") return;
+  enemies.push(new Enemy(100, 100))
+  let randWait = Math.floor((Math.random() * (1100 - 700 + 1) + 700)) * spawnMultiplier;
+  setTimeout(spawnEnemy, randWait);
 }
 function dieLmaoUBad() {
   gameState = "main-menu";
-  clearInterval(enemySpawnInterval);
 }

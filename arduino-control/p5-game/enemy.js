@@ -10,11 +10,14 @@ class Enemy {
     if (this.x + this.sizeX <= 0) {
       // Enemy is off screen. Needs to be removed.
       enemiesToBeDespawned++;
+      spawnMultiplier *= 0.98;
     }
   }
   draw() {
     strokeWeight(0);
     fill(ENEMY_COLOR);  
-    rect(this.x, this.y, this.sizeX, this.sizeY)
+    //rect(this.x, this.y, this.sizeX, this.sizeY)
+    imageMode(CORNER);
+    image(ENEMY_IMAGE, this.x, this.y, this.sizeX, this.sizeY);
   }
 }

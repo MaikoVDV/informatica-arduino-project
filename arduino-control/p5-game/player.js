@@ -10,6 +10,10 @@ class Player {
     this.velY = 0;
     this.jumpForce = 20;
     this.onFloor = false;
+
+    socket.on("input_jump", () => {
+      this.jump();
+    })
   }
   update() {
     this.velY += GRAVITY;
@@ -26,9 +30,7 @@ class Player {
   jump() {
     if (this.onFloor) {
       this.velY = -this.jumpForce;
-      // fetch("http://localhost:3000/toggle").then((res, err) => {
-      // })
-      socket.emit("led_toggle", "blah")
+      socket.emit("led_toggle", "")
     }
   }
   draw() {
