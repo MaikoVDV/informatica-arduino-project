@@ -1,4 +1,5 @@
 class Enemy {
+  // Constructing the enemy
   constructor(sizeX, sizeY) {
     this.x = width; // Spawn at edge of screen
     this.y = height - FLOOR_HEIGHT - sizeY;
