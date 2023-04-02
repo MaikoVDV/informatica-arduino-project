@@ -13,6 +13,7 @@ const io = new Server(8080, {
 });
 
 var board = new jf.Board({port: "COM3"});
+let highscore = 0;
 
 board.on("ready", () => {
   let flashlight = new jf.Led(9);
@@ -31,6 +32,7 @@ board.on("ready", () => {
 
   io.on("connection", socket => {
     console.log("Client connected to websocket!")
+    socket.emit("current_highscore", highscore);
 
     socket.on("challenge_mode", (args) => {
       if (args == "start_challenge") {
@@ -39,6 +41,9 @@ board.on("ready", () => {
         flashlight.stop();
         flashlight.off();
       }
+    })
+    socket.on("new_highscore", (new_highscore) => {
+      highscore = new_highscore;
     })
     socket.on("play_music", (track) => {
       switch (track) {

@@ -12,10 +12,14 @@ const GRASS_TOP_COLOR = color(54, 178, 3);
 const PLAYER_COLOR = color(255)
 const ENEMY_COLOR = color(255)
 
-
+// State
 let gameState = "main-menu";
 let challengeMode = false;
 let immortal = false;
+
+// Score keeping
+let score = 0;
+let highscore = 0;
 
 // Entites in the game
 let player;
@@ -31,7 +35,6 @@ const ENEMY_IMAGE = loadImage("p5-game/gigachad.jpg")
 function setup() {
   createCanvas(600, 400);
   drawingContext.imageSmoothingEnabled = false;
-  console.log("Created p5.js sketch.");
   textFont(PIXEL_FONT);
 
   socket.on("background_change", (value) => {
@@ -48,6 +51,10 @@ function setup() {
         break;
     }
   })
+  socket.on("current_highscore", current_highscore => {
+    console.log("Received highscore from server: " + current_highscore)
+    highscore = current_highscore;
+  });
 }
 
 function draw() {
@@ -58,6 +65,9 @@ function draw() {
     case "main-menu":
       runMenu();
       break;
+    case "dead-screen":
+      runDeadScreen()
+      break;
   }
 }
 function setupGame() {
@@ -67,13 +77,15 @@ function setupGame() {
   enemies = [];
   enemiesToBeDespawned = 0;
 
+  score = 0;
+
   socket.emit("play_music", "mario")
 
   //enemySpawnInterval = setInterval(spawnEnemy, 1000)
   spawnEnemy();
-
 }
 function runGame() {
+  score++;
   background(BG_COLOR);
   //blend(BG_IMAGE, 0, 0, 566, 701, 0, 0, 566, 701, ADD);
   tint(255, bgBlendValue);
@@ -92,6 +104,10 @@ function runGame() {
 
   player.checkCollision();
   despawnEnemies();
+
+  textAlign(LEFT);
+  textSize(16);
+  text("Score: " + score, 10, 10);
 }
 function runMenu() {
   background(0)
@@ -102,13 +118,26 @@ function runMenu() {
   text("Ardino run", width / 2, height / 5);
 
   textSize(24);
-  text("Press space & don't die", width / 2, height / 4 * 3);
+  text("Press the button & don't die!", width / 2, height / 4 * 3);
 
   textSize(16);
   text("Press C for challenge mode", width / 2, height / 4 * 3.5);
 
   imageMode(CENTER);
   image(DINO_IMAGE, width / 2, height / 2, 150, 150);
+}
+function runDeadScreen() {
+  background(0)
+  textAlign(CENTER, CENTER);
+  textSize(32);
+  text("You died!", width / 2, height / 4);
+
+  textSize(24);
+  text(`Your score: ${score}\nHighscore: ${highscore}`, width / 2, height / 2);
+  
+  textSize(24);
+  text("Press the button & don't die!", width / 2, height / 4 * 3);
+
 }
 function keyPressed() {
   if (keyCode == 73) {
@@ -131,6 +160,7 @@ function keyPressed() {
       }
       break;
     case "main-menu":
+    case "dead-screen":
       if (keyCode == 32) {
         setupGame()
       }
@@ -161,5 +191,9 @@ function spawnEnemy() {
 }
 function dieLmaoUBad() {
   socket.emit("play_music", "dead");
-  gameState = "main-menu";
+  if (score > highscore) {
+    highscore = score;
+    socket.emit("new_highscore", highscore);
+  }
+  gameState = "dead-screen";
 }
