@@ -3,18 +3,18 @@
     Might need to get rid of this as it is distracting during gameplay.
 */
 body {
-    background-image: url("crack-website-bg.jpg");
+    background-image: url("arduino-background.jpg");
     background-repeat: repeat;
     background-size: 149px;
-    animation: scroll 5s linear infinite;
+    animation: scroll 120s linear infinite;
     overflow: hidden;
 }
 @keyframes scroll {
     from {
-        background-position: 297px 0px;
+        background-position: 1800px 0px;
     }
     to {
-        background-position: 0px 291px;
+        background-position: 0px 1244px;
     }
 }
 /* Positioning the game in the middle of the screen. */

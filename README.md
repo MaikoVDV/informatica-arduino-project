@@ -16,14 +16,18 @@ Exciting gameplay showing our brave dinosaur protagonist jumping over gigachad
 He did not survive. :\(   
 This page shows the player's score as well as the highscore.
 
+---
+
+![The circuit I made](Screenshots/circuit.jpg "Arduino Circuit")
+The circuit I designed and built that interacts with the game. I chose not to solder the components together as parts of this were from school.
+
 ## Features
 * The player can control the dinosaur by pressing `Space` or by pressing the button on the breadboard
 * When the player starts a new game, a tune is played via the Piezo speaker. The tune was _inspired_ by theme song from Super Mario Bros.
 * For the brave, there is a 'challenge mode.'  
   In challenge mode, a flashlight flickers in your face.  
   ***Tip:*** For extra difficulty, turn off lights.
-* A potentiometer controls blending between two different backgrounds.  
-  ***Tip:*** Don't use it.
+* A potentiometer controls blending between two different backgrounds.   
 * Highscore keeping persists between reload, as it is stored in memory on the server. Restarting the server will also reset highscores.
 
 ## Tools used
@@ -48,7 +52,7 @@ This page shows the player's score as well as the highscore.
 
 ## Installation
 1. [Download and install NodeJS](https://nodejs.org/en/download)
-2. Download this git repository from the Github website or run   
+2. Download this git repository from Github or run:   
     ```git clone https://github.com/MaikoVDV/informatica-arduino-project.git```
 3. Install the server's dependencies by running   
    ```npm install socket.io johnny-five express```
@@ -97,5 +101,5 @@ There are many more parts to this game, like challenge mode, getting input, stat
 
 ## Development process
 This project was made in a week (more reallistically: 3 days). I (Maiko) made it by myself, as I wanted the freedom to made dumb stuff, switch ideas and experiment.  
-The original plan for this project was to run the dino game on two [8x8 dot matrix displys](https://opencircuit.nl/product/8x8-dot-matrix-display-rood-3mm-common-anodehttps://opencircuit.nl/product/8x8-dot-matrix-display-rood-3mm-common-anode). Unfortunately though, I didn't realise that these things need driver boards to work. Plugging them into a breadboard would take hours to program manually, and would probably be too complex to even do successfully.  
+The original plan for this project was to run the dino game on two [8x8 dot matrix displays](https://opencircuit.nl/product/8x8-dot-matrix-display-rood-3mm-common-anodehttps://opencircuit.nl/product/8x8-dot-matrix-display-rood-3mm-common-anode). Unfortunately though, I didn't realise that these things need driver boards to work. Plugging them into a breadboard would take hours to program manually, and would probably be too complex to even do successfully.  
 So, I pivoted to instead create a web game with p5.js. Years ago, I used it quite a lot, and I'd even made the dino game a couple of times, like [this one](https://editor.p5js.org/MaikoVDVeen/full/SyqhImqFm) from 2018. Later, I decided to use WebSockets for communicating with the server, instead of HTTP requests like I'd planned to. This allowed for easier communication, and most importantly: it was two-way, meaning the server could send inputs to the client.
